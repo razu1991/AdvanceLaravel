@@ -11,10 +11,14 @@
   |
  */
 
+use App\Jobs\SendEmailJob;
+use App\Mail\SendEmailMailable;
+use Carbon\Carbon;
+
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/locale/{lang?}', function($lang=null) {
+Route::get('/locale/{lang?}', function($lang = null) {
     App::setLocale($lang);
     return view('language');
 });
@@ -29,3 +33,9 @@ Route::get('search/{searchkey}', 'HomeController@search');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/sendEmail', function() {
+    $job = (new SendEmailJob())->delay(Carbon::now()->addSeconds(5));
+    dispatch($job);
+    return "email is send properly";
+});
