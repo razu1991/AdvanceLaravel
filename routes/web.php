@@ -14,7 +14,7 @@
 use App\Jobs\SendEmailJob;
 use App\Mail\SendEmailMailable;
 use Carbon\Carbon;
-
+use App\Events\TaskEvent;
 Route::get('/', function () {
     return view('welcome');
 });
@@ -38,4 +38,8 @@ Route::get('/sendEmail', function() {
     $job = (new SendEmailJob())->delay(Carbon::now()->addSeconds(5));
     dispatch($job);
     return "email is send properly";
+});
+
+Route::get('event', function() {
+    event(new TaskEvent('Hey how are you'));
 });
