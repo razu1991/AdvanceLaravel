@@ -15,6 +15,7 @@ use App\Jobs\SendEmailJob;
 use App\Mail\SendEmailMailable;
 use Carbon\Carbon;
 use App\Events\TaskEvent;
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -41,5 +42,13 @@ Route::get('/sendEmail', function() {
 });
 
 Route::get('event', function() {
-    event(new TaskEvent('Hey how are you'));
+    event(new TaskEvent('Hey'));
 });
+Route::get('listen', function() {
+    return view('listenBroadcast');
+});
+Route::get('test','HomeController@testPush');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
