@@ -19,9 +19,12 @@ use App\User;
 use App\Notifications\TaskCompleted;
 
 Route::get('/', function () {
-//    User::find(1)->notify(new TaskCompleted);
-    $users=User::find(1);
-    Notification::send($users, new TaskCompleted);
+    $user=User::find(1);
+    //on demand notification
+    Notification::route('mail', 'shahnaouzrazu21@gmail.com')
+            ->notify(new TaskCompleted($user));
+//    $when = now()->addSeconds(5);
+//    User::find(1)->notify((new TaskCompleted())->delay($when));
     return view('welcome');
 });
 Route::get('/locale/{lang?}', function($lang = null) {
@@ -60,9 +63,17 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('subs', function() {
 //    return view('subs');
-    if (Gate::allows('premium',Auth::user())) {
+    if (Gate::allows('premium', Auth::user())) {
         return view('subs');
-    }else{
+    } else {
         return "You are not a subscriber";
     }
 });
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

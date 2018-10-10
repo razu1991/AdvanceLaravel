@@ -6,19 +6,21 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use App\User;
 
-class TaskCompleted extends Notification
+class TaskCompleted extends Notification implements ShouldQueue
 {
     use Queueable;
-
+    
+    public $user;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(User $user)
     {
-        //
+        $this->user = $user;
     }
 
     /**
@@ -41,9 +43,8 @@ class TaskCompleted extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Bitfumes', url('/'))
-                    ->line('Thank you for using our application!');
+                
+                    ->view('welcome',['user'=> $this->user]);
     }
 
     /**
