@@ -15,8 +15,13 @@ use App\Jobs\SendEmailJob;
 use App\Mail\SendEmailMailable;
 use Carbon\Carbon;
 use App\Events\TaskEvent;
+use App\User;
+use App\Notifications\TaskCompleted;
 
 Route::get('/', function () {
+//    User::find(1)->notify(new TaskCompleted);
+    $users=User::find(1);
+    Notification::send($users, new TaskCompleted);
     return view('welcome');
 });
 Route::get('/locale/{lang?}', function($lang = null) {
@@ -47,8 +52,17 @@ Route::get('event', function() {
 Route::get('listen', function() {
     return view('listenBroadcast');
 });
-Route::get('test','HomeController@testPush');
+Route::get('test', 'HomeController@testPush');
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('subs', function() {
+//    return view('subs');
+    if (Gate::allows('premium',Auth::user())) {
+        return view('subs');
+    }else{
+        return "You are not a subscriber";
+    }
+});
